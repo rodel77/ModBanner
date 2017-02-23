@@ -1,4 +1,4 @@
-package mx.com.rodel;
+package mx.com.rodel.modbanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +17,8 @@ import org.spongepowered.api.plugin.Plugin;
 
 import com.google.inject.Inject;
 
-import mx.com.rodel.commands.ModBannerCommand;
-import mx.com.rodel.commands.ModsCommand;
+import mx.com.rodel.modbanner.commands.ModBannerCommand;
+import mx.com.rodel.modbanner.commands.ModsCommand;
 
 @Plugin(id=ModInfo.ID, name=ModInfo.NAME, version=ModInfo.VERSION, description="Ban Mods")
 public class Main {

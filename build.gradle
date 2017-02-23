@@ -20,7 +20,6 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 archivesBaseName = 'ModBanner'
-group = 'mx.com.rodel'
 version = '1.0.0'
 description = 'Ban Mods'
 

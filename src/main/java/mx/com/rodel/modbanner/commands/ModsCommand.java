@@ -1,4 +1,4 @@
-package mx.com.rodel.commands;
+package mx.com.rodel.modbanner.commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +15,9 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import mx.com.rodel.Helper;
-import mx.com.rodel.ModData;
-import mx.com.rodel.PlayerModsAPI;
+import mx.com.rodel.modbanner.Helper;
+import mx.com.rodel.modbanner.ModData;
+import mx.com.rodel.modbanner.PlayerModsAPI;
 
 public class ModsCommand implements CommandCallable {
 

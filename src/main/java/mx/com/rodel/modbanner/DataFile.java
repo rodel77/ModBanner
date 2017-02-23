@@ -1,4 +1,4 @@
-package mx.com.rodel;
+package mx.com.rodel.modbanner;
 
 import java.io.File;
 import java.io.FileNotFoundException;

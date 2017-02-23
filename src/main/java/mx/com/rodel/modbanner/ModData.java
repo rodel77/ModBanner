@@ -1,4 +1,4 @@
-package mx.com.rodel;
+package mx.com.rodel.modbanner;
 
 public interface ModData {
 	public String getName();

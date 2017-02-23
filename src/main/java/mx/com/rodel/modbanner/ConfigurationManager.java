@@ -1,4 +1,4 @@
-package mx.com.rodel;
+package mx.com.rodel.modbanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ConfigurationManager {
 			blackList.addAll(rootNode.getNode("blacklist").getList(new Function<Object, String>() {
 				@Override
 				public String apply(Object t) {
-					return t.toString();
+					return (String) t;
 				}
 			}));
 			kickMsg = rootNode.getNode("kickmsg").getString();

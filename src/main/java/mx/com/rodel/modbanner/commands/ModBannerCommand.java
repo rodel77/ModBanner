@@ -1,4 +1,4 @@
-package mx.com.rodel.commands;
+package mx.com.rodel.modbanner.commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,8 +17,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import mx.com.rodel.Helper;
-import mx.com.rodel.Main;
+import mx.com.rodel.modbanner.Helper;
+import mx.com.rodel.modbanner.Main;
 
 public class ModBannerCommand implements CommandCallable {
 
@@ -55,7 +55,7 @@ public class ModBannerCommand implements CommandCallable {
 					Main.instance.cfgManager.blackList.add(args[1]);
 					Main.instance.cfgManager.save();
 					Main.instance.reloadConfiguration();
-					source.sendMessage(Helper.format("&a"+args[1]+" removed from blacklist!"));
+					source.sendMessage(Helper.format("&a"+args[1]+" added to blacklist!"));
 				}else{
 					source.sendMessage(Helper.format("&cPlease add the mod name /modbanner add <mod>"));
 				}

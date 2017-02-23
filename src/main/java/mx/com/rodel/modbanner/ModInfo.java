@@ -1,4 +1,4 @@
-package mx.com.rodel;
+package mx.com.rodel.modbanner;
 
 public class ModInfo {
 	public final static String NAME = "ModBanner";

@@ -1,4 +1,4 @@
-package mx.com.rodel;
+package mx.com.rodel.modbanner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
