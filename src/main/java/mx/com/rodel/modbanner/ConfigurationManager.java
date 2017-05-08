@@ -18,6 +18,7 @@ public class ConfigurationManager {
 
 	public List<String> blackList = new ArrayList<>();
 	public String kickMsg = "You can't use %mods% in this server";
+	public long kickDelay = 1000;
 	
 	
 	public ConfigurationManager(Main pl) throws IOException {
@@ -48,6 +49,7 @@ public class ConfigurationManager {
 				}
 			}));
 			kickMsg = rootNode.getNode("kickmsg").getString();
+			kickDelay = rootNode.getNode("kickDelay").getLong();
 		} catch (IOException e) {
 			save();
 		}
@@ -60,6 +62,7 @@ public class ConfigurationManager {
 		try {
 			rootNode.getNode("kickmsg").setValue(kickMsg);
 			rootNode.getNode("blacklist").setValue(blackList);
+			rootNode.getNode("kickDelay").setValue(kickDelay);
 			loader.save(rootNode);
 		} catch (IOException e) {
 			rootNode = loader.createEmptyNode();

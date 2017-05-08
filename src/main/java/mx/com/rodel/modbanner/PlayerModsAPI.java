@@ -14,12 +14,23 @@ import net.minecraft.network.NetworkManager;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
 public class PlayerModsAPI {
+	/**
+	 * 
+	 * 
+	 * @param player player to get mods
+	 * @return mod list of null if vanilla
+	 * @throws Exception
+	 */
 	public static List<ModData> getPlayerMods(Player player) throws Exception{
 		EntityPlayerMP pmp = ((EntityPlayerMP) player);
 		NetHandlerPlayServer connection = (NetHandlerPlayServer) pmp.getClass().getField("field_71135_a").get(pmp);
 		NetworkManager nm = (NetworkManager) connection.getClass().getField("field_147371_a").get(connection);
 		
 		List<ModData> data = new ArrayList<>();
+		
+		if(nm==null || NetworkDispatcher.get(nm)==null || NetworkDispatcher.get(nm).getModList()==null){
+			return data;
+		}
 		
 		for(Entry<String, String> mod : NetworkDispatcher.get(nm).getModList().entrySet()){
 			data.add(new ModData() {
