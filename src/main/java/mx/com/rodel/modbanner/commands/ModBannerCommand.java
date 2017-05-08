@@ -76,7 +76,7 @@ public class ModBannerCommand implements CommandCallable {
 				}
 				break;
 			case "list":
-				if(source.hasPermission("modbanner.commmand.list")){
+				if(source.hasPermission("modbanner.commmand.list") || source.hasPermission("modbanner.commmand.manage")){
 					List<Text> t = new ArrayList<>();
 					for(String bl : Main.instance.cfgManager.blackList){
 						t.add(Helper.format(bl));

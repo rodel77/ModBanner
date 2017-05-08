@@ -41,11 +41,11 @@ public class ModsCommand implements CommandCallable {
 		
 		if(args.length>=2){
 			if(args[0].equalsIgnoreCase("player")){
-				if(source.hasPermission("modbanner.command.list.player")){
+				if(source.hasPermission("modbanner.command.modinfo.player")){
 					source.sendMessage(Helper.format(args[1]+" last know mods: "+PlayerModsAPI.getLastPlayerData(args[1]).stream().map(ModData::getCompleteData).collect(Collectors.joining(", "))));
 				}
 			}else if(args[0].equalsIgnoreCase("mod")){
-				if(source.hasPermission("modbanner.command.list.mod")){
+				if(source.hasPermission("modbanner.command.modinfo.mod")){
 					source.sendMessage(Helper.format("Users who use "+args[1]+": "+PlayerModsAPI.getPlayersWhoUseMod(args[1]).stream().collect(Collectors.joining(", "))));
 				}
 			}else{
