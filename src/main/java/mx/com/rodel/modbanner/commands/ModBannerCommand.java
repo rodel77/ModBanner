@@ -44,49 +44,54 @@ public class ModBannerCommand implements CommandCallable {
 
 	@Override
 	public CommandResult process(CommandSource source, String arguments) throws CommandException {
-		if(!source.hasPermission("modbanner")){
-			return CommandResult.empty();
-		}
 		String[] args = arguments.split(" ");
 
 		switch (args[0].toLowerCase()) {
 			case "add":
-				if(args.length>=2){
-					Main.instance.cfgManager.blackList.add(args[1]);
-					Main.instance.cfgManager.save();
-					Main.instance.reloadConfiguration();
-					source.sendMessage(Helper.format("&a"+args[1]+" added to blacklist!"));
-				}else{
-					source.sendMessage(Helper.format("&cPlease add the mod name /modbanner add <mod>"));
+				if(source.hasPermission("modbanner.commmand.add") || source.hasPermission("modbanner.commmand.manage")){
+					if(args.length>=2){
+						Main.instance.cfgManager.blackList.add(args[1]);
+						Main.instance.cfgManager.save();
+						Main.instance.reloadConfiguration();
+						source.sendMessage(Helper.format("&a"+args[1]+" added to blacklist!"));
+					}else{
+						source.sendMessage(Helper.format("&cPlease add the mod name /modbanner add <mod>"));
+					}
 				}
 				break;
 			case "remove":
-				if(args.length>=2){
-					if(Main.instance.cfgManager.blackList.contains(args[1])){
-						Main.instance.cfgManager.blackList.remove(args[1]);
-						source.sendMessage(Helper.format("&a"+args[1]+" removed from blacklist!"));
-						Main.instance.cfgManager.save();
-						Main.instance.reloadConfiguration();
+				if(source.hasPermission("modbanner.commmand.remove") || source.hasPermission("modbanner.commmand.manage")){
+					if(args.length>=2){
+						if(Main.instance.cfgManager.blackList.contains(args[1])){
+							Main.instance.cfgManager.blackList.remove(args[1]);
+							source.sendMessage(Helper.format("&a"+args[1]+" removed from blacklist!"));
+							Main.instance.cfgManager.save();
+							Main.instance.reloadConfiguration();
+						}else{
+							source.sendMessage(Helper.format("&cCan't find mod "+args[1]));
+						}
 					}else{
-						source.sendMessage(Helper.format("&cCan't find mod "+args[1]));
+						source.sendMessage(Helper.format("&cPlease add the mod name /modbanner remove <mod>"));
 					}
-				}else{
-					source.sendMessage(Helper.format("&cPlease add the mod name /modbanner remove <mod>"));
 				}
 				break;
 			case "list":
-				List<Text> t = new ArrayList<>();
-				for(String bl : Main.instance.cfgManager.blackList){
-					t.add(Helper.format(bl));
+				if(source.hasPermission("modbanner.commmand.list")){
+					List<Text> t = new ArrayList<>();
+					for(String bl : Main.instance.cfgManager.blackList){
+						t.add(Helper.format(bl));
+					}
+					PaginationList.builder()
+					.title(Helper.format("BlackListed Mods"))
+					.contents(t)
+					.padding(Text.of("-")).sendTo(source);
 				}
-				PaginationList.builder()
-				.title(Helper.format("BlackListed Mods"))
-				.contents(t)
-				.padding(Text.of("-")).sendTo(source);
 				break;
 			case "reload":
-				Main.instance.reloadConfiguration();
-				source.sendMessage(Helper.format("&aConfiguration reloaded!"));
+				if(source.hasPermission("modbanner.commmand.reload")){
+					Main.instance.reloadConfiguration();
+					source.sendMessage(Helper.format("&aConfiguration reloaded!"));
+				}
 				break;
 			default:
 				source.sendMessage(getHelp(source).get());

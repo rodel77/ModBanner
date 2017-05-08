@@ -37,16 +37,17 @@ public class ModsCommand implements CommandCallable {
 
 	@Override
 	public CommandResult process(CommandSource source, String arguments) throws CommandException {
-		if(!source.hasPermission("modbanner")){
-			return CommandResult.empty();
-		}
 		String[] args = arguments.split(" ");
 		
 		if(args.length>=2){
 			if(args[0].equalsIgnoreCase("player")){
-				source.sendMessage(Helper.format(args[1]+" last know mods: "+PlayerModsAPI.getLastPlayerData(args[1]).stream().map(ModData::getCompleteData).collect(Collectors.joining(", "))));
+				if(source.hasPermission("modbanner.command.list.player")){
+					source.sendMessage(Helper.format(args[1]+" last know mods: "+PlayerModsAPI.getLastPlayerData(args[1]).stream().map(ModData::getCompleteData).collect(Collectors.joining(", "))));
+				}
 			}else if(args[0].equalsIgnoreCase("mod")){
-				source.sendMessage(Helper.format("Users who use "+args[1]+": "+PlayerModsAPI.getPlayersWhoUseMod(args[1]).stream().collect(Collectors.joining(", "))));
+				if(source.hasPermission("modbanner.command.list.mod")){
+					source.sendMessage(Helper.format("Users who use "+args[1]+": "+PlayerModsAPI.getPlayersWhoUseMod(args[1]).stream().collect(Collectors.joining(", "))));
+				}
 			}else{
 				source.sendMessage(Helper.format("&cInvalid args"));
 				source.sendMessage(getHelp(source).get());
