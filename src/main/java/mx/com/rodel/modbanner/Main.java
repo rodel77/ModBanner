@@ -69,10 +69,6 @@ public class Main {
 			try {
 				boolean kicked = false;
 				List<ModData> mods = PlayerModsAPI.getPlayerMods(e.getTargetEntity());
-				if(mods==null){
-					log.warn("[ModBanner] Can not get "+e.getTargetEntity().getName()+" mods cause is not using forge!");
-					return;
-				}
 				List<String> bannedMods = new ArrayList<>();
 				for(String blacklist : cfgManager.blackList){
 					for(ModData mod : mods){
@@ -94,6 +90,8 @@ public class Main {
 				if(kicked){
 					e.getTargetEntity().kick(Helper.format(cfgManager.kickMsg.replace("%mods%", String.join(", ", bannedMods))));
 				}
+			} catch (VanillaPlayerException e01) {
+				log.warn("Can not get "+e.getTargetEntity().getName()+" mods cause is not using forge!");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

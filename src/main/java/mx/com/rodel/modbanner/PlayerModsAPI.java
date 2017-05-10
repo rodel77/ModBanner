@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.spongepowered.api.entity.living.player.Player;
@@ -27,9 +28,12 @@ public class PlayerModsAPI {
 		NetworkManager nm = (NetworkManager) connection.getClass().getField("field_147371_a").get(connection);
 		
 		List<ModData> data = new ArrayList<>();
+		Map<String, String> modList = new HashMap<>();
 		
-		if(nm==null || NetworkDispatcher.get(nm)==null || NetworkDispatcher.get(nm).getModList()==null){
-			return data;
+		try {
+			modList.putAll(NetworkDispatcher.get(nm).getModList());
+		} catch (NullPointerException e) {
+			throw new VanillaPlayerException();
 		}
 		
 		for(Entry<String, String> mod : NetworkDispatcher.get(nm).getModList().entrySet()){
