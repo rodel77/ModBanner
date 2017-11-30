@@ -1,4 +1,4 @@
-[![Sponge](https://img.shields.io/badge/sponge-6.0.0-yellow.svg)](https://forums.spongepowered.org/t/no-entry-sign-modbanner-ban-undesirable-mods/17681)
+[![Sponge](https://img.shields.io/badge/sponge-1.10,11,12-yellow.svg)](https://forums.spongepowered.org/t/no-entry-sign-modbanner-ban-undesirable-mods/17681)
 
 # ModBanner
 Forge Mod Banner for Sponge

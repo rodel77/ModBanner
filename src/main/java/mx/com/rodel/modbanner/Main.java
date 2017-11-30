@@ -89,7 +89,7 @@ public class Main {
 							lo.add(mod.getCompleteData());
 						}
 					}
-					log.info(("[ModBanner] "+e.getTargetEntity().getName()+" is trying to join with there mods: "+String.join(", ", lo)+" "+(kicked ? (bypass ? "(It should be kicked but has the bypass permission)" : "(Getting kicked)") : "")));
+					log.info(("[ModBanner] "+e.getTargetEntity().getName()+" is trying to join with these mods: "+String.join(", ", lo)+" "+(kicked ? (bypass ? "(It should be kicked but has the bypass permission)" : "(Getting kicked)") : "")));
 					if(kicked && !bypass){
 						e.getTargetEntity().kick(Helper.format(cfgManager.kickMsg.replace("%mods%", String.join(", ", bannedMods))));
 					}
