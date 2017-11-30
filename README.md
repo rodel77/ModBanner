@@ -7,7 +7,7 @@ Forge Mod Banner for Sponge
 Main page: https://forums.spongepowered.org/t/no-entry-sign-modbanner-ban-undesirable-mods/17681
 
 ## Requirements
-+ SpongeForge
++ SpongeForge 1.10 - 1.11 - 1.12
 
 ## How to build
 
