@@ -13,6 +13,7 @@ import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 
 import com.google.inject.Inject;
@@ -21,7 +22,7 @@ import mx.com.rodel.modbanner.commands.ModBannerCommand;
 import mx.com.rodel.modbanner.commands.ModsCommand;
 import mx.com.rodel.modbanner.exceptions.VanillaPlayerException;
 
-@Plugin(id=ModInfo.ID, name=ModInfo.NAME, version=ModInfo.VERSION, description="Ban Mods")
+@Plugin(id=ModInfo.ID, name=ModInfo.NAME, version=ModInfo.VERSION, description="Ban Mods", dependencies= @Dependency(id = "Forge"))
 public class Main {
 	
 	public static Main instance;
