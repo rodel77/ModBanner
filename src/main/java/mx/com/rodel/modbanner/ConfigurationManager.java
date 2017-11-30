@@ -20,7 +20,6 @@ public class ConfigurationManager {
 	public String kickMsg = "You can't use %mods% in this server";
 	public long kickDelay = 1000;
 	
-	
 	public ConfigurationManager(Main pl) throws IOException {
 		this.pl = pl;
 		

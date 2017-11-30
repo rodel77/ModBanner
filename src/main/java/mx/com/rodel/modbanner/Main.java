@@ -19,6 +19,7 @@ import com.google.inject.Inject;
 
 import mx.com.rodel.modbanner.commands.ModBannerCommand;
 import mx.com.rodel.modbanner.commands.ModsCommand;
+import mx.com.rodel.modbanner.exceptions.VanillaPlayerException;
 
 @Plugin(id=ModInfo.ID, name=ModInfo.NAME, version=ModInfo.VERSION, description="Ban Mods")
 public class Main {
@@ -64,38 +65,40 @@ public class Main {
 	}
 	
 	@Listener
-	public void on(ClientConnectionEvent.Join e) {
-		Sponge.getScheduler().createTaskBuilder().execute(() -> {
-			try {
-				boolean kicked = false;
-				List<ModData> mods = PlayerModsAPI.getPlayerMods(e.getTargetEntity());
-				List<String> bannedMods = new ArrayList<>();
-				for(String blacklist : cfgManager.blackList){
-					for(ModData mod : mods){
-						if(mod.getName().contains(blacklist)){
-							bannedMods.add(mod.getName());
-							kicked = true;
+	public void onConnection(ClientConnectionEvent.Join e) {
+			Sponge.getScheduler().createTaskBuilder().execute(() -> {
+				try {
+					boolean kicked = false;
+					List<ModData> mods = PlayerModsAPI.getPlayerMods(e.getTargetEntity());
+					List<String> bannedMods = new ArrayList<>();
+					for(String blacklist : cfgManager.blackList){
+						for(ModData mod : mods){
+							if(mod.getName().contains(blacklist)){
+								bannedMods.add(mod.getName());
+								kicked = true;
+							}
 						}
 					}
-				}
-				List<String> lo = new ArrayList<>();
-				for(ModData mod : mods){
-					if(bannedMods.contains(mod.getName())){
-						lo.add(mod.getCompleteData()+" (Banned)");
-					}else{
-						lo.add(mod.getCompleteData());
+					List<String> lo = new ArrayList<>();
+					boolean bypass = e.getTargetEntity().hasPermission("modbanner.bypass");
+					
+					for(ModData mod : mods){
+						if(bannedMods.contains(mod.getName())){
+							lo.add(mod.getCompleteData()+" (Banned)");
+						}else{
+							lo.add(mod.getCompleteData());
+						}
 					}
+					log.info(("[ModBanner] "+e.getTargetEntity().getName()+" is trying to join with there mods: "+String.join(", ", lo)+" "+(kicked ? (bypass ? "(It should be kicked but has the bypass permission)" : "(Getting kicked)") : "")));
+					if(kicked && !bypass){
+						e.getTargetEntity().kick(Helper.format(cfgManager.kickMsg.replace("%mods%", String.join(", ", bannedMods))));
+					}
+				} catch (VanillaPlayerException e01) {
+					log.warn("Can not get "+e.getTargetEntity().getName()+" mods cause is not using forge!");
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
-				log.info(("[ModBanner] "+e.getTargetEntity().getName()+" is trying to join with there mods: "+String.join(", ", lo)+" "+(kicked ? "(Getting kicked)" : "")));
-				if(kicked){
-					e.getTargetEntity().kick(Helper.format(cfgManager.kickMsg.replace("%mods%", String.join(", ", bannedMods))));
-				}
-			} catch (VanillaPlayerException e01) {
-				log.warn("Can not get "+e.getTargetEntity().getName()+" mods cause is not using forge!");
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		}).delay(1000, TimeUnit.MILLISECONDS).submit(Main.instance);
+			}).delay(1000, TimeUnit.MILLISECONDS).submit(Main.instance);
 	}
 	
 	public void reloadConfiguration(){

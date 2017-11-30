@@ -1,5 +1,6 @@
 package mx.com.rodel.modbanner;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.Map.Entry;
 
 import org.spongepowered.api.entity.living.player.Player;
 
+import mx.com.rodel.modbanner.exceptions.ReflectionException;
+import mx.com.rodel.modbanner.exceptions.VanillaPlayerException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
@@ -16,41 +19,68 @@ import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
 public class PlayerModsAPI {
 	/**
-	 * 
-	 * 
+	 * This method return the mod list of a player, it will throw a VanillaPlayerException if the player don't send any mod handshake info
+	 *
 	 * @param player player to get mods
 	 * @return mod list of null if vanilla
-	 * @throws Exception
+	 * @throws VanillaPlayerException if player don't send any mod handshake info, in newest versions of forge it just will return a empty list...
+	 * @throws ReflectionException internal error on getting forge nms stuff
 	 */
-	public static List<ModData> getPlayerMods(Player player) throws Exception{
-		EntityPlayerMP pmp = ((EntityPlayerMP) player);
-		NetHandlerPlayServer connection = (NetHandlerPlayServer) pmp.getClass().getField("field_71135_a").get(pmp);
-		NetworkManager nm = (NetworkManager) connection.getClass().getField("field_147371_a").get(connection);
-		
+	public static List<ModData> getPlayerMods(Player player) throws VanillaPlayerException, ReflectionException{
 		List<ModData> data = new ArrayList<>();
-		Map<String, String> modList = new HashMap<>();
-		
+		EntityPlayerMP pmp = ((EntityPlayerMP) player);
+		NetHandlerPlayServer connection = null;
+		NetworkManager nm = null;
+		NetworkDispatcher np = null;
 		try {
-			modList.putAll(NetworkDispatcher.get(nm).getModList());
-		} catch (NullPointerException e) {
-			throw new VanillaPlayerException();
+			connection = (NetHandlerPlayServer) pmp.getClass().getField("field_71135_a").get(pmp);
+			nm = (NetworkManager) connection.getClass().getField("field_147371_a").get(connection);
+			np = NetworkDispatcher.get(nm);
+			
+			// In old versions of Forge modList by default its null, then when you use the normal np.getModList() it try to translate a normal Map into a unmodifiableMap
+			// It obviously throws a null pointer exception, and you can't catch it
+			// Then we check the native Map to see it that player is playing in vanilla
+			// You can see that in newest version of Forge they changed that to a empty collection
+			// Check this: https://github.com/MinecraftForge/MinecraftForge/blob/1.12.x/src/main/java/net/minecraftforge/fml/common/network/handshake/NetworkDispatcher.java#L113
+			// This cause a ton of problems to ModBanner... and a lot of time to found the problem
+			Class<?> npClass = np.getClass();
+			
+			Field dummyModListField = npClass.getDeclaredField("modList");
+			dummyModListField.setAccessible(true);
+			Object dummyModList = dummyModListField.get(np);
+			
+			if(dummyModList==null){
+				// And there you go!
+				throw new VanillaPlayerException();
+			}
+			
+			// Now to avoid problems we use the normal method
+			Map<String, String> modList = np.getModList();
+			
+			for(Entry<String, String> mod : modList.entrySet()){
+				data.add(new ModData() {
+					@Override
+					public String getVersion() {
+						return mod.getValue();
+					}
+					
+					@Override
+					public String getName() {
+						return mod.getKey();
+					}
+				});
+			}
+			setData(player.getName(), data);
+			return data;
+		} catch (IllegalArgumentException e1) {
+			throw new ReflectionException("IllegalArgumentException: "+e1.getMessage());
+		} catch (IllegalAccessException e1) {
+			throw new ReflectionException("IllegalAccessException: "+e1.getMessage());
+		} catch (NoSuchFieldException e1) {
+			throw new ReflectionException("NoSuchFieldException: "+e1.getMessage());
+		} catch (SecurityException e1) {
+			throw new ReflectionException("Security Exception: "+e1.getMessage());
 		}
-		
-		for(Entry<String, String> mod : NetworkDispatcher.get(nm).getModList().entrySet()){
-			data.add(new ModData() {
-				@Override
-				public String getVersion() {
-					return mod.getValue();
-				}
-				
-				@Override
-				public String getName() {
-					return mod.getKey();
-				}
-			});
-		}
-		setData(player.getName(), data);
-		return data;
 	}
 	
 	public static void setData(String player, List<ModData> mods){
