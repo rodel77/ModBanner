@@ -22,7 +22,7 @@ import mx.com.rodel.modbanner.commands.ModBannerCommand;
 import mx.com.rodel.modbanner.commands.ModsCommand;
 import mx.com.rodel.modbanner.exceptions.VanillaPlayerException;
 
-@Plugin(id=ModInfo.ID, name=ModInfo.NAME, version=ModInfo.VERSION, description="Ban Mods", dependencies= @Dependency(id = "Forge"))
+@Plugin(id=ModInfo.ID, name=ModInfo.NAME, version=ModInfo.VERSION, description="Ban Mods")
 public class Main {
 	
 	public static Main instance;
